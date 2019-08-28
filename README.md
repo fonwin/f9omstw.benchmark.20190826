@@ -1,6 +1,14 @@
 ﻿f9omstw benchmark
 =================
 
+20190828 補充說明
+* 這次的測試犯了一個錯誤:
+  * CPU list: "10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29"
+  * 應改成: "10,11,12,13,14,15,16,17,18,19,30,31,32,33,34,35,36,37,38,39"
+  * 因為 0..9, 20..29 的 "physical id : 0"
+  * 因為 10..19, 30..39 的 "physical id : 1"
+  * 請參考 [cpuinfo](cpuinfo.txt)
+
 ## 基本說明
 * sourc code
   * [libfon9](https://github.com/fonwin/libfon9) (版本: 3408e02)
@@ -17,7 +25,9 @@
 
 * OmsCore 使用 OmsCoreByThread
   * 收單 thread 與 OmsCore 在不同 thread.
-  * 使用 condition variable.
+  * 目前 WaitPolicy 固定為 Block(使用 condition variable).
+  * 尚未針對 latency 最佳化, 例如: 綁定 CPU, 設定 WaitPolicy.
+  * 甚至不使用 OmsCoreByThread 改用 mutex?
 
 ---------------------------------------
 ## [初次啟動](Startup.md)
@@ -82,6 +92,7 @@
   * T2-|50%=7|75%=15|90%=18|99%=27|99.9%=36|99.99%=454|Worst=1424|1623|2744|
 * 結果 log 裡面的群組: x1..x6 為使用 sudo 執行, 讓 $MemLock=Y 生效.
   * 但從結果來看, 為何沒有比較快?
+  * 20190828: CPU list 設定有錯造成的?
 
 ---------------------------------------
 ## 測試結果探討
